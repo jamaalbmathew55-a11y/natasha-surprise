@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Natasha Surprise</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Titan+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bitcount+Grid+Single:wght@100..900&display=swap" rel="stylesheet">
+
+<style>
+
+/* ------------------ GLOBAL PAGE LAYOUT ------------------ */
+body {
+    font-family: Arial, Titan One, sans-serif;
+    background: #ffe6eb;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    height: 100vh;
+}
+
+/* Sections for spacing */
+#top-section {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#middle-section {
+    margin-top: 40px;
+}
+
+#bottom-section {
+    margin-top: 40px;
+}
+
+/* ------------------ BUTTONS ------------------ */
+button {
+    padding: 14px 26px;
+    font-size: 20px;
+    border: none;
+    border-radius: 12px;
+    background: hotpink;
+    color: white;
+    cursor: pointer;
+    margin: 10px;
+}
+
+#add-more-button, #remove-button {
+    display: none;
+    background: #ff1493;
+}
+
+/* ------------------ HEART ------------------ */
+.heart {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    background: red;
+    transform: rotate(-45deg);
+    display: none;
+    animation: pop 0.4s ease forwards, heartbeat 1.2s infinite 0.4s, glow 2s infinite ease-in-out;
+    z-index: 9999;
+}
+
+/* Heart glow */
+@keyframes glow {
+    0% { box-shadow: 0 0 10px rgba(255,0,0,0.4); }
+    50% { box-shadow: 0 0 30px rgba(255,0,0,0.9); }
+    100% { box-shadow: 0 0 10px rgba(255,0,0,0.4); }
+}
+
+.heart::before,
+.heart::after {
+    content: "";
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    background: red;
+    border-radius: 50%;
+}
+
+.heart::before { top: -80px; left: 0; }
+.heart::after { left: 80px; top: 0; }
+
+.heart-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    z-index: 10000;
+    text-align: center;
+    font-family: 'Bitcount Grid Single', sans-serif;
+}
+
+/* POP animation */
+@keyframes pop {
+    0% { transform: rotate(-45deg) scale(0); }
+    100% { transform: rotate(-45deg) scale(1); }
+}
+
+/* HEARTBEAT animation */
+@keyframes heartbeat {
+    0% { transform: rotate(-45deg) scale(1); }
+    25% { transform: rotate(-45deg) scale(1.12); }
+    40% { transform: rotate(-45deg) scale(1); }
+    60% { transform: rotate(-45deg) scale(1.18); }
+    100% { transform: rotate(-45deg) scale(1); }
+}
+
+/* ------------------ FLOATING FLOWERS ------------------ */
+.floating-flower {
+    position: fixed;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 5px solid pink;
+    box-shadow: 0 0 15px rgba(255, 0, 100, 0.5);
+    opacity: 0;
+    animation: fadeIn 1.5s ease forwards;
+    z-index: 100; /* BELOW HEART */
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    0% { opacity: 0; transform: scale(0.6); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* ------------------ MOBILE RESPONSIVE ------------------ */
+@media (max-width: 600px) {
+    .heart {
+        width: 120px;
+        height: 120px;
+    }
+    .heart::before, .heart::after {
+        width: 120px;
+        height: 120px;
+    }
+    .heart::before { top: -60px; }
+    .heart::after { left: 60px; }
+
+    button {
+        font-size: 18px;
+        padding: 12px 20px;
+    }
+
+    .floating-flower {
+        width: 90px;
+        height: 90px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="top-section">
+    <h1>Hey There Beautiful</h1>
+    <p>Wanna See Something Cool?</p>
+    <button onclick="showHeart()">Click Me</button>
+</div>
+
+<div id="middle-section">
+    <div class="heart" id="heart">
+        <div class="heart-text">I Love You<br>Natasha Roysa</div>
+    </div>
+</div>
+
+<div id="bottom-section">
+    <button id="add-more-button" onclick="addOneBouquet()">Add Bouquet</button>
+    <button id="remove-button" onclick="removeOneBouquet()">Remove Bouquet</button>
+</div>
+
+<div id="flower-container"></div>
+
+<script>
+
+/* ------------------ HEART ------------------ */
+function showHeart() {
+    const heart = document.getElementById("heart");
+    const addBtn = document.getElementById("add-more-button");
+    const removeBtn = document.getElementById("remove-button");
+
+    heart.style.display = "block";
+
+    heart.style.animation = "none";
+    heart.offsetHeight;
+    heart.style.animation = "pop 0.4s ease, heartbeat 1.2s infinite 0.4s, glow 2s infinite ease-in-out";
+
+    setTimeout(() => {
+        addBtn.style.display = "inline-block";
+        removeBtn.style.display = "inline-block";
+    }, 600);
+}
+
+/* ------------------ FLOATING FLOWERS ------------------ */
+const flowerImages = [
+    "assets/nr-one.jfif",
+    "assets/nr-two.jfif",
+    "assets/nr-three.jfif",
+    "assets/nr-four.jfif",
+    "assets/nr-five.jfif"
+];
+
+let bouquets = [];
+
+function createFloatingFlower() {
+    const container = document.getElementById("flower-container");
+    const img = document.createElement("img");
+
+    img.src = flowerImages[Math.floor(Math.random() * flowerImages.length)];
+    img.classList.add("floating-flower");
+
+    const x = Math.random() * window.innerWidth;
+    const y = Math.random() * window.innerHeight;
+
+    img.style.left = x + "px";
+    img.style.top = y + "px";
+
+    container.appendChild(img);
+
+    const bouquet = {
+        el: img,
+        x: x,
+        y: y,
+        dx: (Math.random() * 0.6 - 0.3),  // slow drifting
+        dy: (Math.random() * 0.6 - 0.3),
+        changeTimer: 0
+    };
+
+    bouquets.push(bouquet);
+}
+
+function addOneBouquet() {
+    createFloatingFlower();
+}
+
+function removeOneBouquet() {
+    const last = bouquets.pop();
+    if (last) last.el.remove();
+}
+
+/* ------------------ MOVEMENT ENGINE ------------------ */
+function animateBouquets() {
+    const heart = document.getElementById("heart");
+    const heartRect = heart.getBoundingClientRect();
+
+    bouquets.forEach(b => {
+        b.changeTimer++;
+
+        // Occasional direction changes
+        if (b.changeTimer > 200) {
+            b.dx += (Math.random() * 0.4 - 0.2);
+            b.dy += (Math.random() * 0.4 - 0.2);
+            b.changeTimer = 0;
+        }
+
+        // Soft push-away from heart
+        const bx = b.x + 60;
+        const by = b.y + 60;
+
+        const hx = heartRect.left + heartRect.width / 2;
+        const hy = heartRect.top + heartRect.height / 2;
+
+        const dist = Math.hypot(bx - hx, by - hy);
+
+        if (dist < 200) {
+            const angle = Math.atan2(by - hy, bx - hx);
+            b.dx += Math.cos(angle) * 0.05;
+            b.dy += Math.sin(angle) * 0.05;
+        }
+
+        // Bounce off edges
+        if (b.x <= 0 || b.x >= window.innerWidth - 120) b.dx *= -1;
+        if (b.y <= 0 || b.y >= window.innerHeight - 120) b.dy *= -1;
+
+        // Update position
+        b.x += b.dx;
+        b.y += b.dy;
+
+        b.el.style.left = b.x + "px";
+        b.el.style.top = b.y + "px";
+    });
+
+    requestAnimationFrame(animateBouquets);
+}
+
+animateBouquets();
+
+</script>
+
+</body>
+</html>
